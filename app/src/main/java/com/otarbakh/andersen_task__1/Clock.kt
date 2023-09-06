@@ -17,16 +17,20 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
     private var handColor = Color.BLUE
     private var handWidth = 8.0f // Width of the clock hand
     private var handLength = 360 // Length of the clock hand
-    private var rotationAngle = 180f // Initial rotation angle
+    private var rotationAngleSeconds = 230f // Initial rotation angle
+    private var rotationAngleMinutes = 60f // Initial rotation angle
+    private var rotationAngleHours = 110f // Initial rotation angle
     private var borderColor = Color.BLACK
-    private var borderWidth = 4.0f
+    private var borderWidth = 10.0f
     private var size = 320
 
     private val rotationHandler = Handler(Looper.getMainLooper())
 
     init {
         // Start rotating the rectangle every second
-        startRotation()
+        startSecondRotation()
+        startMinuteRotation()
+        startHourRotation()
     }
 
     fun clockFrame(canvas: Canvas?){
@@ -43,16 +47,30 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     override fun onDraw(canvas: Canvas?) {
         super.onDraw(canvas)
+        clockFrame(canvas)
+
         canvas?.save()
-        canvas?.rotate(rotationAngle, width / 2f, height / 2f)
+        canvas?.rotate(rotationAngleSeconds, width / 2f, height / 2f)
         drawSecondsClockHand(canvas)
         canvas?.restore()
-        clockFrame(canvas)
+
+
+
+        canvas?.save()
+        canvas?.rotate(rotationAngleMinutes, width / 2f, height / 2f)
+        drawMinutesClockHand(canvas)
+        canvas?.restore()
+
+        canvas?.save()
+        canvas?.rotate(rotationAngleHours, width / 2f, height / 2f)
+        drawHoursClockHand(canvas)
+        canvas?.restore()
     }
 
+    //Draw from here
     private fun drawSecondsClockHand(canvas: Canvas?) {
         canvas?.apply {
-            paint.color = handColor
+            paint.color = Color.RED
             paint.style = Paint.Style.FILL
 
             val centerX = width / 2f
@@ -62,7 +80,7 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
             val startX = centerX - handWidth / 2
             val endX = centerX + handWidth / 2
             val startY = centerY - handLength / 200
-            val endY = centerY + handLength / 1
+            val endY = centerY + handLength / 2
 
             drawRect(startX, startY, endX, endY, paint)
         }
@@ -70,7 +88,7 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
 
     private fun drawMinutesClockHand(canvas: Canvas?) {
         canvas?.apply {
-            paint.color = handColor
+            paint.color = Color.BLUE
             paint.style = Paint.Style.FILL
 
             val centerX = width / 2f
@@ -80,25 +98,75 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
             val startX = centerX - handWidth / 2
             val endX = centerX + handWidth / 2
             val startY = centerY - handLength / 200
-            val endY = centerY + handLength / 1
+            val endY = centerY + handLength / 1.5f
+
+            drawRect(startX, startY, endX, endY, paint)
+        }
+    }
+
+    private fun drawHoursClockHand(canvas: Canvas?) {
+        canvas?.apply {
+            paint.color = Color.BLACK
+            paint.style = Paint.Style.FILL
+
+            val centerX = width / 2f
+            val centerY = height / 2f
+
+            // Calculate the coordinates for the two ends of the clock hand
+            val startX = centerX - handWidth / 0.8f
+            val endX = centerX + handWidth / 2
+            val startY = centerY - handLength / 200
+            val endY = centerY + handLength / 2.5f
 
             drawRect(startX, startY, endX, endY, paint)
         }
     }
 
 
-    private fun startRotation() {
+
+    //Rotations from here
+    private fun startSecondRotation() {
         rotationHandler.postDelayed({
             // Rotate the rectangle by 6 degrees
-            rotationAngle += 6f
+            rotationAngleSeconds += 6f
             // Ensure the angle stays within 360 degrees
-            if (rotationAngle >= 360f) {
-                rotationAngle -= 360f
+            if (rotationAngleSeconds >= 360f) {
+                rotationAngleSeconds -= 360f
             }
             // Redraw the view
             invalidate()
             // Schedule the next rotation
-            startRotation()
+            startSecondRotation()
+        }, 61000) // Rotate every 1000 milliseconds (1 second)
+    }
+
+    private fun startMinuteRotation() {
+        rotationHandler.postDelayed({
+            // Rotate the rectangle by 6 degrees
+            rotationAngleMinutes += 6f
+            // Ensure the angle stays within 360 degrees
+            if (rotationAngleMinutes >= 360f) {
+                rotationAngleMinutes -= 360f
+            }
+            // Redraw the view
+            invalidate()
+            // Schedule the next rotation
+            startMinuteRotation()
         }, 1000) // Rotate every 1000 milliseconds (1 second)
+    }
+
+    private fun startHourRotation() {
+        rotationHandler.postDelayed({
+            // Rotate the rectangle by 6 degrees
+            rotationAngleHours += 30f
+            // Ensure the angle stays within 360 degrees
+            if (rotationAngleHours >= 360f) {
+                rotationAngleHours -= 360f
+            }
+            // Redraw the view
+            invalidate()
+            // Schedule the next rotation
+            startSecondRotation()
+        }, 3600000) // Rotate every 1000 milliseconds (1 second)
     }
 }
