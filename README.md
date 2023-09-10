@@ -1,4 +1,5 @@
 # Andersen_Task__1
 
-https://github.com/otarbakh/Andersen_Task__1/assets/87203322/c7201b77-ef24-49b5-9ab3-4a494741962a
+
+![Screenshot_20230911_023946](https://github.com/otarbakh/Andersen_Task__1/assets/87203322/1e5078f1-869d-4d4d-ad1f-39650ad4a273)
 
