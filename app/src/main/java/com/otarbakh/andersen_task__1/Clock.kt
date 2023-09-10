@@ -98,7 +98,7 @@ class Clock(context: Context, attrs: AttributeSet) : View(context, attrs) {
             val startX = centerX - handWidth / 2
             val endX = centerX + handWidth / 2
             val startY = centerY - handLength / 200
-            val endY = centerY + handLength / 3.5f
+            val endY = centerY + handLength / 1.5f
 
             drawRect(startX, startY, endX, endY, paint)
         }
